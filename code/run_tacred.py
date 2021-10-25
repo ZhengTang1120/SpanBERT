@@ -287,8 +287,7 @@ def main(args):
     else:
         logger.addHandler(logging.FileHandler(os.path.join(args.output_dir, "eval.log"), 'w'))
     logger.info(args)
-    logger.info("device: {}, n_gpu: {}, 16-bits training: {}".format(
-        device, n_gpu, args.fp16))
+    logger.info("device: {}".format(device))
 
     processor = DataProcessor()
     label_list = processor.get_labels(args.data_dir, args.negative_label)
