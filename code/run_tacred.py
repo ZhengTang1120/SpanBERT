@@ -21,7 +21,7 @@ from torch.nn import CrossEntropyLoss
 from pytorch_pretrained_bert.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WEIGHTS_NAME, CONFIG_NAME
 from pytorch_pretrained_bert.modeling import BertForSequenceClassification
 from pytorch_pretrained_bert.tokenization import BertTokenizer
-from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
+from pytorch_pretrained_bert.optimization import BertAdam
 
 CLS = "[CLS]"
 SEP = "[SEP]"
@@ -135,17 +135,18 @@ def convert_examples_to_features(examples, label2id, max_seq_length, tokenizer, 
         OBJECT_NER = get_special_token("OBJ=%s" % example.ner2)
 
         for i, token in enumerate(example.sentence):
-            if i == example.span1[0]:
-                tokens.append(SUBJECT_NER)
-            if i == example.span2[0]:
-                tokens.append(OBJECT_NER)
+            # if i == example.span1[0]:
+            #     tokens.append(SUBJECT_NER)
+            # if i == example.span2[0]:
+            #     tokens.append(OBJECT_NER)
             if (i >= example.span1[0]) and (i <= example.span1[1]):
-                pass
+                tokens.append(SUBJECT_NER)
             elif (i >= example.span2[0]) and (i <= example.span2[1]):
-                pass
+                tokens.append(OBJECT_NER)
             else:
-                for sub_token in tokenizer.tokenize(token):
-                    tokens.append(sub_token)
+                tokens.append(token)
+                # for sub_token in tokenizer.tokenize(token):
+                #     tokens.append(sub_token)
         tokens.append(SEP)
         num_tokens += len(tokens)
 
