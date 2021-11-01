@@ -135,18 +135,20 @@ def convert_examples_to_features(examples, label2id, max_seq_length, tokenizer, 
         OBJECT_NER = get_special_token("OBJ=%s" % example.ner2)
 
         for i, token in enumerate(example.sentence):
-            # if i == example.span1[0]:
-            #     tokens.append(SUBJECT_NER)
-            # if i == example.span2[0]:
-            #     tokens.append(OBJECT_NER)
-            if (i >= example.span1[0]) and (i <= example.span1[1]):
+            if i == example.span1[0]:
                 tokens.append(SUBJECT_NER)
-            elif (i >= example.span2[0]) and (i <= example.span2[1]):
+            if i == example.span2[0]:
                 tokens.append(OBJECT_NER)
+            if (i >= example.span1[0]) and (i <= example.span1[1]):
+                pass
+                # tokens.append(SUBJECT_NER)
+            elif (i >= example.span2[0]) and (i <= example.span2[1]):
+                pass
+                # tokens.append(OBJECT_NER)
             else:
-                tokens.append(token)
-                # for sub_token in tokenizer.tokenize(token):
-                #     tokens.append(sub_token)
+                # tokens.append(token)
+                for sub_token in tokenizer.tokenize(token):
+                    tokens.append(sub_token)
         tokens.append(SEP)
         num_tokens += len(tokens)
 
@@ -267,7 +269,7 @@ def evaluate(model, device, eval_dataloader, eval_label_ids, num_labels, verbose
 
 
 def main(args):
-    device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() and not args.no_cuda else "cpu")
     n_gpu = torch.cuda.device_count()
 
     args.train_batch_size = args.train_batch_size
